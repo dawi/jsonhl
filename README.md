@@ -1,12 +1,12 @@
-# jsonhl
+## jsonhl 
 
-Json syntax highlighting for terminal applications.
+Go library to colorize json output of terminal applications.
 
-## Fetaures
+## Features
 
-* small library
-* that adds color to your json output 
-* without changing its formatting
+* small and focused go library
+* adds color to your json output
+* without changing the json formatting
 
 ## Usage
 
@@ -14,8 +14,7 @@ Json syntax highlighting for terminal applications.
 fmt.Println(jsonhl.HighlightJson(` { "hello" : "world" } `))
 ```
 
-## Todo
+## Todos
 
 * tests
 * configurable colors
-* optional reformatting (maybe)
