@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	fmt.Println(jsonhl.HighlightJson(" { \"hello\" : \"world\" } "))
+	fmt.Println(jsonhl.Highlight(` { "hello" : "world" } `))
 }
