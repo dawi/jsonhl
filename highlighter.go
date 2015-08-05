@@ -7,10 +7,26 @@ import (
 	"strings"
 )
 
-var keyColor = "\x1b[38;5;33m"
-var valueColor = "\x1b[36m"
 var resetColor = "\x1b[0m"
-var bracketColor = "\x1b[90m"
+
+type Colors map[jsont.TokenType]string
+
+var DefaultColors = Colors{
+	jsont.ObjectStart: "\x1b[90m",
+	jsont.ObjectEnd:   "\x1b[90m",
+	jsont.ArrayStart:  "\x1b[90m",
+	jsont.ArrayEnd:    "\x1b[90m",
+	jsont.Colon:       "\x1b[90m",
+	jsont.Comma:       "\x1b[90m",
+	jsont.FieldName:   "\x1b[38;5;33m",
+	jsont.True:        "\x1b[36m",
+	jsont.False:       "\x1b[36m",
+	jsont.Null:        "\x1b[36m",
+	jsont.Integer:     "\x1b[36m",
+	jsont.Float:       "\x1b[36m",
+	jsont.String:      "\x1b[36m",
+	jsont.Unknown:     "\x1b[31m",
+}
 
 func HighlightString(jsonString string) (string, error) {
 	b := &bytes.Buffer{}
@@ -23,31 +39,8 @@ func Highlight(reader io.Reader, writer io.Writer) error {
 	tokenizer := jsont.NewTokenizer(reader)
 
 	for tokenizer.Next() {
-
 		token := tokenizer.Token()
-
-		var color string
-		switch token.Type {
-		case jsont.ObjectStart, jsont.ObjectEnd:
-			color = bracketColor
-		case jsont.ArrayStart, jsont.ArrayEnd:
-			color = bracketColor
-		case jsont.Colon, jsont.Comma:
-			color = bracketColor
-		case jsont.FieldName:
-			color = keyColor
-		case jsont.String:
-			color = valueColor
-		case jsont.Null:
-			color = valueColor
-		case jsont.True, jsont.False:
-			color = valueColor
-		case jsont.Whitespace:
-			color = valueColor
-		case jsont.Unknown:
-			color = valueColor
-		}
-
+		color := DefaultColors[token.Type]
 		if _, err := writer.Write([]byte(color + token.Value + resetColor)); err != nil {
 			return err
 		}

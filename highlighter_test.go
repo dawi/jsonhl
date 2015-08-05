@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-var colorReplacer = strings.NewReplacer("kc", keyColor, "vc", valueColor, "gc", bracketColor, "rc", resetColor)
+var colorReplacer = strings.NewReplacer("kc", "\x1b[38;5;33m", "vc", "\x1b[36m", "gc", "\x1b[90m", "rc", resetColor)
 
 func TestHighlightJson(t *testing.T) {
 
