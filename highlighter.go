@@ -12,13 +12,13 @@ var valueColor = "\x1b[36m"
 var resetColor = "\x1b[0m"
 var bracketColor = "\x1b[90m"
 
-func HighlightString(jsonString string) string {
+func HighlightString(jsonString string) (string, error) {
 	b := &bytes.Buffer{}
-	Highlight(strings.NewReader(jsonString), b)
-	return string(b.Bytes())
+	err := Highlight(strings.NewReader(jsonString), b)
+	return string(b.Bytes()), err
 }
 
-func Highlight(reader io.Reader, writer io.Writer) {
+func Highlight(reader io.Reader, writer io.Writer) error {
 
 	tokenizer := jsont.NewTokenizer(reader)
 
@@ -26,25 +26,32 @@ func Highlight(reader io.Reader, writer io.Writer) {
 
 		token := tokenizer.Token()
 
+		var color string
 		switch token.Type {
 		case jsont.ObjectStart, jsont.ObjectEnd:
-			writer.Write([]byte(bracketColor + token.Value + resetColor))
+			color = bracketColor
 		case jsont.ArrayStart, jsont.ArrayEnd:
-			writer.Write([]byte(bracketColor + token.Value + resetColor))
+			color = bracketColor
 		case jsont.Colon, jsont.Comma:
-			writer.Write([]byte(bracketColor + token.Value + resetColor))
+			color = bracketColor
 		case jsont.FieldName:
-			writer.Write([]byte(keyColor + token.Value + resetColor))
+			color = keyColor
 		case jsont.String:
-			writer.Write([]byte(valueColor + token.Value + resetColor))
+			color = valueColor
 		case jsont.Null:
-			writer.Write([]byte(valueColor + token.Value + resetColor))
+			color = valueColor
 		case jsont.True, jsont.False:
-			writer.Write([]byte(valueColor + token.Value + resetColor))
+			color = valueColor
 		case jsont.Whitespace:
-			writer.Write([]byte(valueColor + token.Value + resetColor))
+			color = valueColor
 		case jsont.Unknown:
-			writer.Write([]byte(valueColor + token.Value + resetColor))
+			color = valueColor
+		}
+
+		if _, err := writer.Write([]byte(color + token.Value + resetColor)); err != nil {
+			return err
 		}
 	}
+
+	return tokenizer.Error()
 }
