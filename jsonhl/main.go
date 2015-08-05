@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"github.com/dawi/jsonhl"
+	"os"
 )
 
 func main() {
-	fmt.Println(jsonhl.Highlight(` { "hello" : "world" } `))
+	jsonhl.Highlight(os.Stdin, os.Stdout)
 }

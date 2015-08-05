@@ -3,6 +3,7 @@ package jsonhl
 import (
 	"bytes"
 	"github.com/dawi/jsont"
+	"io"
 	"strings"
 )
 
@@ -11,11 +12,15 @@ var valueColor = "\x1b[36m"
 var resetColor = "\x1b[0m"
 var bracketColor = "\x1b[90m"
 
-func Highlight(jsonString string) string {
+func HighlightString(jsonString string) string {
+	b := &bytes.Buffer{}
+	Highlight(strings.NewReader(jsonString), b)
+	return string(b.Bytes())
+}
 
-	var resultBuffer bytes.Buffer
+func Highlight(reader io.Reader, writer io.Writer) {
 
-	tokenizer := jsont.NewTokenizer(strings.NewReader(jsonString))
+	tokenizer := jsont.NewTokenizer(reader)
 
 	for tokenizer.Next() {
 
@@ -23,21 +28,23 @@ func Highlight(jsonString string) string {
 
 		switch token.Type {
 		case jsont.ObjectStart, jsont.ObjectEnd:
-			resultBuffer.WriteString(bracketColor + token.Value + resetColor)
+			writer.Write([]byte(bracketColor + token.Value + resetColor))
 		case jsont.ArrayStart, jsont.ArrayEnd:
-			resultBuffer.WriteString(bracketColor + token.Value + resetColor)
+			writer.Write([]byte(bracketColor + token.Value + resetColor))
 		case jsont.Colon, jsont.Comma:
-			resultBuffer.WriteString(bracketColor + token.Value + resetColor)
+			writer.Write([]byte(bracketColor + token.Value + resetColor))
 		case jsont.FieldName:
-			resultBuffer.WriteString(keyColor + token.Value + resetColor)
+			writer.Write([]byte(keyColor + token.Value + resetColor))
 		case jsont.String:
-			resultBuffer.WriteString(valueColor + token.Value + resetColor)
+			writer.Write([]byte(valueColor + token.Value + resetColor))
 		case jsont.Null:
-			resultBuffer.WriteString(valueColor + token.Value + resetColor)
+			writer.Write([]byte(valueColor + token.Value + resetColor))
 		case jsont.True, jsont.False:
-			resultBuffer.WriteString(valueColor + token.Value + resetColor)
+			writer.Write([]byte(valueColor + token.Value + resetColor))
+		case jsont.Whitespace:
+			writer.Write([]byte(valueColor + token.Value + resetColor))
+		case jsont.Unknown:
+			writer.Write([]byte(valueColor + token.Value + resetColor))
 		}
 	}
-
-	return resultBuffer.String()
 }

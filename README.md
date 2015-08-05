@@ -10,8 +10,16 @@ Go library to colorize json output of terminal applications.
 
 ## Usage
 
+Using io.Reader and io.Writer:
+
 ```
-fmt.Println(jsonhl.Highlight(` { "hello" : "world" } `))
+jsonhl.Highlight(os.Stdin, os.Stdout)
+```
+
+Using strings:
+
+```
+fmt.Println(jsonhl.HighlightString(` { "hello" : "world" } `))
 ```
 
 ## Todos
