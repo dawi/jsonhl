@@ -21,7 +21,7 @@ func TestHighlightJson(t *testing.T) {
 
 func validate(input string, expected string, t *testing.T) {
 	expected = colorReplacer.Replace(expected)
-	if result := Highlight(input); result != expected {
+	if result := HighlightString(input); result != expected {
 		t.Error("ERROR: " + result)
 	}
 }
