@@ -34,6 +34,12 @@ func HighlightString(jsonString string) (string, error) {
 	return string(b.Bytes()), err
 }
 
+func HighlightBytes(jsonString []byte) ([]byte, error) {
+	b := &bytes.Buffer{}
+	err := Highlight(strings.NewReader(string(jsonString)), b)
+	return b.Bytes(), err
+}
+
 func Highlight(reader io.Reader, writer io.Writer) error {
 
 	tokenizer := jsont.NewTokenizer(reader)
