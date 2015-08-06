@@ -29,15 +29,17 @@ var DefaultColors = Colors{
 }
 
 func HighlightString(jsonString string) (string, error) {
-	b := &bytes.Buffer{}
-	err := Highlight(strings.NewReader(jsonString), b)
-	return string(b.Bytes()), err
+	reader := strings.NewReader(jsonString)
+	writer := &bytes.Buffer{}
+	err := Highlight(reader, writer)
+	return writer.String(), err
 }
 
 func HighlightBytes(jsonString []byte) ([]byte, error) {
-	b := &bytes.Buffer{}
-	err := Highlight(strings.NewReader(string(jsonString)), b)
-	return b.Bytes(), err
+	reader := bytes.NewBuffer(jsonString)
+	writer := &bytes.Buffer{}
+	err := Highlight(reader, writer)
+	return writer.Bytes(), err
 }
 
 func Highlight(reader io.Reader, writer io.Writer) error {
