@@ -13,15 +13,12 @@ Using io.Reader and io.Writer:
 
 ```
 jsonhl.Highlight(os.Stdin, os.Stdout)
+jsonhl.HighlightC(os.Stdin, os.Stdout, jsonhl.DefaultColors)
 ```
 
 Using strings:
 
 ```
-fmt.Println(jsonhl.HighlightString(` { "hello" : "world" } `))
+fmt.Println(jsonhl.HighlightString(`{ "hello" : "world" }`))
+fmt.Println(jsonhl.HighlightStringC(`{ "hello" : "world" }`, jsonhl.DefaultColors))
 ```
-
-## Todos
-
-* tests
-* configurable colors

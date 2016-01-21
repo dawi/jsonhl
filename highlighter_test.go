@@ -3,9 +3,14 @@ package jsonhl
 import (
 	"strings"
 	"testing"
+	"github.com/dawi/jsont"
 )
 
-var colorReplacer = strings.NewReplacer("kc", "\x1b[38;5;33m", "vc", "\x1b[36m", "gc", "\x1b[90m", "rc", resetColor)
+var colorReplacer = strings.NewReplacer(
+	"kc", DefaultColors[jsont.FieldName],
+	"vc", DefaultColors[jsont.String],
+	"gc", DefaultColors[jsont.ObjectStart],
+	"rc", resetColor)
 
 func TestHighlightJson(t *testing.T) {
 
